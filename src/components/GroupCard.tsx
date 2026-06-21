@@ -43,7 +43,6 @@ export default function GroupCard({ group, onReorderGroup }: Props) {
           >
             <GroupTeamRow
               team={team}
-              rank={i + 1}
               isFirst={i === 0}
               isLast={i === group.teams.length - 1}
               onMoveUp={() => moveTeam(i, i - 1)}

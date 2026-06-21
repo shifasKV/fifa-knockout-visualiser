@@ -3,7 +3,6 @@ import type { Team } from '../data/teams';
 
 interface Props {
   team: Team;
-  rank: number;
   isFirst: boolean;
   isLast: boolean;
   onMoveUp: () => void;
@@ -13,7 +12,6 @@ interface Props {
 
 export default function GroupTeamRow({
   team,
-  rank,
   isFirst,
   isLast,
   onMoveUp,

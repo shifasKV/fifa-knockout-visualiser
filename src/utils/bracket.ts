@@ -254,7 +254,7 @@ export function getThirdPlaceAssignmentLabel(
 /** @deprecated use buildFullBracket directly */
 export function buildFullBracketFromR32(
   _r32Matches: Match[],
-  winners: Record<string, string>
+  _winners: Record<string, string>
 ): BracketState {
   throw new Error('Use buildFullBracket(groups, thirdPlaceRanking, winners)');
 }
