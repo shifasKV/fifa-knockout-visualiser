@@ -10,7 +10,7 @@ export const INITIAL_GROUPS: Group[] = [
   { id: 'E', name: 'Group E', teams: [T.GER, T.CIV, T.CUW, T.ECU] },
   { id: 'F', name: 'Group F', teams: [T.NED, T.JPN, T.SWE, T.TUN] },
   { id: 'G', name: 'Group G', teams: [T.BEL, T.EGY, T.IRN, T.NZL] },
-  { id: 'H', name: 'Group H', teams: [T.ESP, T.URU, T.KSA, T.CPV] },
+  { id: 'H', name: 'Group H', teams: [T.URU, T.ESP, T.KSA, T.CPV] },
   { id: 'I', name: 'Group I', teams: [T.FRA, T.SEN, T.NOR, T.IRQ] },
   { id: 'J', name: 'Group J', teams: [T.ARG, T.AUT, T.ALG, T.JOR] },
   { id: 'K', name: 'Group K', teams: [T.COL, T.POR, T.COD, T.UZB] },
