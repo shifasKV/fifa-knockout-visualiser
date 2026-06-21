@@ -16,9 +16,31 @@ function getAdminClient() {
   });
 }
 
+async function ensureSeedRow(
+  supabase: ReturnType<typeof createClient>
+): Promise<void> {
+  const { data } = await supabase
+    .from('visitor_counter')
+    .select('id')
+    .eq('id', 1)
+    .maybeSingle();
+
+  if (data) return;
+
+  const { error } = await supabase
+    .from('visitor_counter')
+    .insert({ id: 1, count: STARTING_COUNT });
+
+  if (error && !error.message.includes('duplicate')) {
+    throw error;
+  }
+}
+
 async function readCount(
   supabase: ReturnType<typeof createClient>
 ): Promise<number> {
+  await ensureSeedRow(supabase);
+
   const { data, error } = await supabase
     .from('visitor_counter')
     .select('count')
@@ -32,10 +54,7 @@ async function readCount(
 async function incrementCount(
   supabase: ReturnType<typeof createClient>
 ): Promise<number> {
-  await supabase.from('visitor_counter').upsert(
-    { id: 1, count: STARTING_COUNT },
-    { onConflict: 'id', ignoreDuplicates: true }
-  );
+  await ensureSeedRow(supabase);
 
   const { data, error } = await supabase.rpc('increment_visitor');
   if (!error && data != null) {
@@ -57,6 +76,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Cache-Control', 'no-store');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
