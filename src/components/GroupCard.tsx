@@ -1,5 +1,6 @@
 import { Reorder } from 'framer-motion';
 import type { Group, Team } from '../data/teams';
+import DelayedReorderItem from './DelayedReorderItem';
 import GroupTeamRow from './GroupTeamRow';
 
 interface Props {
@@ -30,10 +31,10 @@ export default function GroupCard({ group, onReorderGroup }: Props) {
         className="p-1.5 space-y-0"
       >
         {group.teams.map((team, i) => (
-          <Reorder.Item
+          <DelayedReorderItem
             key={team.id}
             value={team}
-            className="cursor-grab active:cursor-grabbing"
+            className="cursor-grab active:cursor-grabbing touch-pan-y"
             whileDrag={{
               scale: 1.03,
               zIndex: 10,
@@ -49,7 +50,7 @@ export default function GroupCard({ group, onReorderGroup }: Props) {
               onMoveDown={() => moveTeam(i, i + 1)}
               isEliminated={i === 3}
             />
-          </Reorder.Item>
+          </DelayedReorderItem>
         ))}
       </Reorder.Group>
     </div>

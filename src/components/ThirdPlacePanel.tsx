@@ -1,5 +1,6 @@
 import { Reorder } from 'framer-motion';
 import type { ThirdPlaceEntry } from '../data/teams';
+import DelayedReorderItem from './DelayedReorderItem';
 import ThirdPlaceRow from './ThirdPlaceRow';
 
 interface Props {
@@ -23,7 +24,7 @@ export default function ThirdPlacePanel({ ranking, onReorder }: Props) {
           Best 3rd-Place Teams
         </h3>
         <p className="text-[10px] text-gray-400 mt-0.5">
-          Top 8 qualify — drag or use arrows
+          Top 8 qualify — hold to drag on mobile, or use arrows
         </p>
       </div>
       <Reorder.Group
@@ -33,10 +34,10 @@ export default function ThirdPlacePanel({ ranking, onReorder }: Props) {
         className="p-1.5 space-y-0"
       >
         {ranking.map((entry, i) => (
-          <Reorder.Item
+          <DelayedReorderItem
             key={entry.group}
             value={entry}
-            className="cursor-grab active:cursor-grabbing"
+            className="cursor-grab active:cursor-grabbing touch-pan-y"
             whileDrag={{
               scale: 1.03,
               zIndex: 10,
@@ -51,7 +52,7 @@ export default function ThirdPlacePanel({ ranking, onReorder }: Props) {
               onMoveUp={() => moveEntry(i, i - 1)}
               onMoveDown={() => moveEntry(i, i + 1)}
             />
-          </Reorder.Item>
+          </DelayedReorderItem>
         ))}
       </Reorder.Group>
     </div>
