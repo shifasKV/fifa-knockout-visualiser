@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import type { Group, Team, ThirdPlaceEntry } from './data/teams';
 import { INITIAL_GROUPS } from './data/initialGroups';
-import { buildThirdPlaceList } from './utils/qualification';
+import { buildThirdPlaceList, buildDefaultThirdPlaceList } from './utils/qualification';
 import { buildFullBracket, cleanupWinners } from './utils/bracket';
 import {
   saveGroups,
@@ -28,7 +28,7 @@ function initGroups(): Group[] {
 
 function initThirdPlace(): ThirdPlaceEntry[] {
   const savedOrder = loadThirdPlaceGroupOrder();
-  const baseline = buildThirdPlaceList(INITIAL_GROUPS, []);
+  const baseline = buildDefaultThirdPlaceList(INITIAL_GROUPS);
   if (!savedOrder) return baseline;
 
   const reordered: ThirdPlaceEntry[] = [];

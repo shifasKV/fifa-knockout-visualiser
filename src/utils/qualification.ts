@@ -1,4 +1,5 @@
 import type { Group, Team, ThirdPlaceEntry } from '../data/teams';
+import { DEFAULT_THIRD_PLACE_GROUP_ORDER } from '../data/initialGroups';
 
 export function getGroupWinner(group: Group): Team {
   return group.teams[0];
@@ -44,6 +45,23 @@ export function buildThirdPlaceList(
     ...entry,
     qualified: i < 8,
   }));
+}
+
+export function buildDefaultThirdPlaceList(groups: Group[]): ThirdPlaceEntry[] {
+  return buildThirdPlaceList(
+    groups,
+    DEFAULT_THIRD_PLACE_GROUP_ORDER.map((groupId, i) => {
+      const group = groups.find((g) => g.id === groupId);
+      if (!group) {
+        throw new Error(`Unknown group in default 3rd-place order: ${groupId}`);
+      }
+      return {
+        group: groupId,
+        team: getGroupThird(group),
+        qualified: i < 8,
+      };
+    })
+  );
 }
 
 export function getQualifiedThirdPlaceTeams(

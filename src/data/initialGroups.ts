@@ -16,3 +16,19 @@ export const INITIAL_GROUPS: Group[] = [
   { id: 'K', name: 'Group K', teams: [T.COL, T.POR, T.COD, T.UZB] },
   { id: 'L', name: 'Group L', teams: [T.ENG, T.CRO, T.GHA, T.PAN] },
 ];
+
+/** Default 3rd-place ranking by group (top 8 qualify). */
+export const DEFAULT_THIRD_PLACE_GROUP_ORDER = [
+  'A', // South Korea
+  'C', // Scotland
+  'F', // Sweden
+  'D', // Paraguay
+  'I', // Norway
+  'L', // Ghana
+  'G', // Iran
+  'E', // Ecuador
+  'B',
+  'H',
+  'J',
+  'K',
+];
