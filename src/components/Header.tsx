@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Eye } from 'lucide-react';
-import { incrementVisitorCount } from '../utils/supabase';
+import { recordVisitorVisit } from '../utils/supabase';
 
 interface Props {
   activeTab: 'knockout' | 'groups';
@@ -12,7 +12,7 @@ function useVisitorCount() {
   const [count, setCount] = useState<number | null>(null);
   useEffect(() => {
     let cancelled = false;
-    incrementVisitorCount().then((n) => {
+    recordVisitorVisit().then((n) => {
       if (!cancelled) setCount(n);
     });
     return () => { cancelled = true; };
