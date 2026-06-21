@@ -1,0 +1,75 @@
+import type { Group, ThirdPlaceEntry } from '../data/teams';
+
+const KEYS = {
+  groups: 'fifa-bracket-groups',
+  thirdPlace: 'fifa-bracket-third-place',
+  winners: 'fifa-bracket-winners',
+} as const;
+
+export function saveGroups(groups: Group[]) {
+  try {
+    const data = groups.map((g) => ({
+      id: g.id,
+      teamIds: g.teams.map((t) => t.id),
+    }));
+    localStorage.setItem(KEYS.groups, JSON.stringify(data));
+  } catch {}
+}
+
+export function loadGroups(
+  defaultGroups: Group[]
+): Group[] | null {
+  try {
+    const raw = localStorage.getItem(KEYS.groups);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as { id: string; teamIds: string[] }[];
+
+    const allTeams = defaultGroups.flatMap((g) => g.teams);
+    const teamById = Object.fromEntries(allTeams.map((t) => [t.id, t]));
+
+    return data.map((saved) => {
+      const defaultGroup = defaultGroups.find((g) => g.id === saved.id);
+      if (!defaultGroup) return null;
+      const teams = saved.teamIds
+        .map((id) => teamById[id])
+        .filter(Boolean);
+      if (teams.length !== defaultGroup.teams.length) return null;
+      return { ...defaultGroup, teams };
+    }).filter(Boolean) as Group[];
+  } catch {
+    return null;
+  }
+}
+
+export function saveThirdPlaceRanking(ranking: ThirdPlaceEntry[]) {
+  try {
+    const data = ranking.map((e) => e.group);
+    localStorage.setItem(KEYS.thirdPlace, JSON.stringify(data));
+  } catch {}
+}
+
+export function loadThirdPlaceGroupOrder(): string[] | null {
+  try {
+    const raw = localStorage.getItem(KEYS.thirdPlace);
+    if (!raw) return null;
+    return JSON.parse(raw) as string[];
+  } catch {
+    return null;
+  }
+}
+
+export function saveWinners(winners: Record<string, string>) {
+  try {
+    localStorage.setItem(KEYS.winners, JSON.stringify(winners));
+  } catch {}
+}
+
+export function loadWinners(): Record<string, string> | null {
+  try {
+    const raw = localStorage.getItem(KEYS.winners);
+    if (!raw) return null;
+    return JSON.parse(raw) as Record<string, string>;
+  } catch {
+    return null;
+  }
+}
