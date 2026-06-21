@@ -1,10 +1,28 @@
 import type { Group, ThirdPlaceEntry } from '../data/teams';
 
+/** Bump when INITIAL_GROUPS default order changes so stale saves are ignored. */
+export const DEFAULT_STANDINGS_VERSION = 2;
+
 const KEYS = {
   groups: 'fifa-bracket-groups',
   thirdPlace: 'fifa-bracket-third-place',
   winners: 'fifa-bracket-winners',
+  version: 'fifa-bracket-standings-version',
 } as const;
+
+function savedVersionMatches(): boolean {
+  try {
+    return localStorage.getItem(KEYS.version) === String(DEFAULT_STANDINGS_VERSION);
+  } catch {
+    return false;
+  }
+}
+
+function markStandingsSaved() {
+  try {
+    localStorage.setItem(KEYS.version, String(DEFAULT_STANDINGS_VERSION));
+  } catch {}
+}
 
 export function saveGroups(groups: Group[]) {
   try {
@@ -13,12 +31,14 @@ export function saveGroups(groups: Group[]) {
       teamIds: g.teams.map((t) => t.id),
     }));
     localStorage.setItem(KEYS.groups, JSON.stringify(data));
+    markStandingsSaved();
   } catch {}
 }
 
 export function loadGroups(
   defaultGroups: Group[]
 ): Group[] | null {
+  if (!savedVersionMatches()) return null;
   try {
     const raw = localStorage.getItem(KEYS.groups);
     if (!raw) return null;
@@ -45,10 +65,12 @@ export function saveThirdPlaceRanking(ranking: ThirdPlaceEntry[]) {
   try {
     const data = ranking.map((e) => e.group);
     localStorage.setItem(KEYS.thirdPlace, JSON.stringify(data));
+    markStandingsSaved();
   } catch {}
 }
 
 export function loadThirdPlaceGroupOrder(): string[] | null {
+  if (!savedVersionMatches()) return null;
   try {
     const raw = localStorage.getItem(KEYS.thirdPlace);
     if (!raw) return null;
