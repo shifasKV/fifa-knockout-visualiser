@@ -1,9 +1,11 @@
 {
   "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
-  "crons": [
-    {
-      "path": "/api/standings",
-      "schedule": "*/5 * * * *"
+  "functions": {
+    "api/standings.ts": {
+      "maxDuration": 30
+    },
+    "api/visitor.ts": {
+      "maxDuration": 10
     }
-  ]
+  }
 }
