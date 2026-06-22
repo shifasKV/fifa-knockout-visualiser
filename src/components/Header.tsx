@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Eye } from 'lucide-react';
+import { Eye, RefreshCw } from 'lucide-react';
 import { recordVisitorVisit } from '../utils/supabase';
 
 interface Props {
   activeTab: 'knockout' | 'groups';
   onTabChange: (tab: 'knockout' | 'groups') => void;
   champion: { flag: string; name: string } | null;
+  liveUpdatedAt: string | null;
+  isLive: boolean;
+  onSyncLive: () => void;
 }
 
 function useVisitorCount() {
@@ -20,7 +23,24 @@ function useVisitorCount() {
   return count;
 }
 
-export default function Header({ activeTab, onTabChange, champion }: Props) {
+function formatTimeAgo(isoDate: string): string {
+  const diff = Date.now() - new Date(isoDate).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
+export default function Header({
+  activeTab,
+  onTabChange,
+  champion,
+  liveUpdatedAt,
+  isLive,
+  onSyncLive,
+}: Props) {
   const visitorCount = useVisitorCount();
 
   return (
@@ -31,9 +51,35 @@ export default function Header({ activeTab, onTabChange, champion }: Props) {
             <h1 className="text-xl md:text-2xl font-extrabold text-fifa-navy tracking-tight">
               FIFA World Cup 26™
             </h1>
-            <p className="text-gray-500 text-[11px] mt-0.5">
-              Knockout Stage Simulator
-            </p>
+            <div className="flex items-center gap-2 mt-0.5">
+              <p className="text-gray-500 text-[11px]">
+                Knockout Stage Simulator
+              </p>
+              {liveUpdatedAt && (
+                <span className="flex items-center gap-1 text-[10px]">
+                  {isLive ? (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-green-600 font-medium">
+                        LIVE · {formatTimeAgo(liveUpdatedAt)}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+                      <span className="text-gray-400">Manual mode</span>
+                      <button
+                        onClick={onSyncLive}
+                        className="ml-0.5 text-fifa-teal hover:text-fifa-teal-dark transition-colors cursor-pointer"
+                        title="Sync live standings"
+                      >
+                        <RefreshCw size={10} />
+                      </button>
+                    </>
+                  )}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
