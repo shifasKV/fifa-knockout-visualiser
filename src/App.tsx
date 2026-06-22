@@ -124,7 +124,6 @@ export default function App() {
       <Header
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        champion={bracket.champion}
       />
 
       {activeTab === 'knockout' && (

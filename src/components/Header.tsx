@@ -5,10 +5,9 @@ const CHAI_URL = 'https://www.chai4.me/shifas';
 interface Props {
   activeTab: 'knockout' | 'groups';
   onTabChange: (tab: 'knockout' | 'groups') => void;
-  champion: { flag: string; name: string } | null;
 }
 
-export default function Header({ activeTab, onTabChange, champion }: Props) {
+export default function Header({ activeTab, onTabChange }: Props) {
 
   return (
     <header className="bg-white border-b border-gray-200">
@@ -24,14 +23,6 @@ export default function Header({ activeTab, onTabChange, champion }: Props) {
           </div>
 
           <div className="flex items-center gap-4">
-            {champion && (
-              <div className="hidden sm:flex items-center gap-2 bg-fifa-gold/10 border border-fifa-gold/30 rounded-full px-4 py-1.5">
-                <span className="text-fifa-gold text-xs font-bold">🏆</span>
-                <span className="text-fifa-navy text-sm font-bold">
-                  {champion.flag} {champion.name}
-                </span>
-              </div>
-            )}
             <a
               href={CHAI_URL}
               target="_blank"
@@ -43,15 +34,6 @@ export default function Header({ activeTab, onTabChange, champion }: Props) {
             </a>
           </div>
         </div>
-
-        {champion && (
-          <div className="sm:hidden mt-3 flex items-center justify-center gap-2 bg-fifa-gold/10 border border-fifa-gold/30 rounded-full px-4 py-1.5">
-            <span className="text-fifa-gold text-xs font-bold">🏆</span>
-            <span className="text-fifa-navy text-sm font-bold">
-              {champion.flag} {champion.name}
-            </span>
-          </div>
-        )}
 
         <div className="flex mt-4 gap-0 bg-gray-100 rounded-lg p-0.5 max-w-xs">
           <button
