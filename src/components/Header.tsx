@@ -1,4 +1,5 @@
 import { Coffee } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const CHAI_URL = 'https://www.chai4.me/shifas';
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function Header({ activeTab, onTabChange }: Props) {
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <header className="bg-white border-b border-gray-200">
@@ -23,15 +25,26 @@ export default function Header({ activeTab, onTabChange }: Props) {
           </div>
 
           <div className="flex items-center gap-4">
-            <a
+            <motion.a
               href={CHAI_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors shadow-sm hover:shadow"
+              animate={
+                shouldReduceMotion
+                  ? undefined
+                  : { scale: [1, 1.06, 1], opacity: [1, 0.92, 1] }
+              }
+              transition={
+                shouldReduceMotion
+                  ? undefined
+                  : { duration: 2.2, repeat: Infinity, ease: 'easeInOut' }
+              }
+              whileHover={{ scale: 1.08 }}
             >
               <Coffee size={14} className="text-amber-700" />
               <span>Buy me a Chai</span>
-            </a>
+            </motion.a>
           </div>
         </div>
 
