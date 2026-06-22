@@ -179,6 +179,9 @@ export default function App() {
           onReorderGroup={handleReorderGroup}
           thirdPlaceRanking={currentThirdPlace}
           onThirdPlaceReorder={handleThirdPlaceReorder}
+          liveUpdatedAt={liveUpdatedAt}
+          isLive={isLive}
+          onSyncLive={handleSyncLive}
         />
       )}
     </div>
