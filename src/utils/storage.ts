@@ -1,7 +1,7 @@
 import type { Group, ThirdPlaceEntry } from '../data/teams';
 
 /** Bump when INITIAL_GROUPS default order changes so stale saves are ignored. */
-export const DEFAULT_STANDINGS_VERSION = 4;
+export const DEFAULT_STANDINGS_VERSION = 5;
 
 const KEYS = {
   groups: 'fifa-bracket-groups',
