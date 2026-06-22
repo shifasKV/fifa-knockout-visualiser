@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Eye } from 'lucide-react';
-import { recordVisitorVisit } from '../utils/supabase';
+import { Coffee } from 'lucide-react';
+
+const CHAI_URL = 'https://www.chai4.me/shifas';
 
 interface Props {
   activeTab: 'knockout' | 'groups';
@@ -8,20 +8,7 @@ interface Props {
   champion: { flag: string; name: string } | null;
 }
 
-function useVisitorCount() {
-  const [count, setCount] = useState<number | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    recordVisitorVisit().then((n) => {
-      if (!cancelled) setCount(n);
-    });
-    return () => { cancelled = true; };
-  }, []);
-  return count;
-}
-
 export default function Header({ activeTab, onTabChange, champion }: Props) {
-  const visitorCount = useVisitorCount();
 
   return (
     <header className="bg-white border-b border-gray-200">
@@ -45,12 +32,15 @@ export default function Header({ activeTab, onTabChange, champion }: Props) {
                 </span>
               </div>
             )}
-            {visitorCount !== null && (
-              <div className="flex items-center gap-1.5 text-gray-400 text-[11px]">
-                <Eye size={12} />
-                <span>{visitorCount.toLocaleString()}</span>
-              </div>
-            )}
+            <a
+              href={CHAI_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors shadow-sm hover:shadow"
+            >
+              <Coffee size={14} className="text-amber-700" />
+              <span>Buy me a Chai</span>
+            </a>
           </div>
         </div>
 
