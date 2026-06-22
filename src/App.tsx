@@ -11,7 +11,6 @@ import {
   saveWinners,
   loadWinners,
 } from './utils/storage';
-import { fetchLiveStandings } from './utils/liveStandings';
 import Header from './components/Header';
 import GroupsPanel from './components/GroupsPanel';
 import KnockoutBracket from './components/KnockoutBracket';
@@ -59,31 +58,6 @@ export default function App() {
   const [thirdPlaceRanking, setThirdPlaceRanking] =
     useState<ThirdPlaceEntry[]>(initThirdPlace);
   const [winners, setWinners] = useState<Record<string, string>>(initWinners);
-  const [liveUpdatedAt, setLiveUpdatedAt] = useState<string | null>(null);
-  const [isLive, setIsLive] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchLiveStandings().then((result) => {
-      if (cancelled || !result) return;
-      setGroups(result.groups);
-      setLiveUpdatedAt(result.updatedAt);
-      setIsLive(true);
-    });
-    return () => { cancelled = true; };
-  }, []);
-
-  useEffect(() => {
-    if (!isLive) return;
-    const interval = setInterval(async () => {
-      const result = await fetchLiveStandings();
-      if (result) {
-        setGroups(result.groups);
-        setLiveUpdatedAt(result.updatedAt);
-      }
-    }, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [isLive]);
 
   const currentThirdPlace = useMemo(
     () => buildThirdPlaceList(groups, thirdPlaceRanking),
@@ -108,7 +82,6 @@ export default function App() {
 
   const handleReorderGroup = useCallback(
     (groupId: string, newTeams: Team[]) => {
-      setIsLive(false);
       setGroups((prev) =>
         prev.map((g) => (g.id === groupId ? { ...g, teams: newTeams } : g))
       );
@@ -146,24 +119,12 @@ export default function App() {
     []
   );
 
-  const handleSyncLive = useCallback(async () => {
-    const result = await fetchLiveStandings();
-    if (result) {
-      setGroups(result.groups);
-      setLiveUpdatedAt(result.updatedAt);
-      setIsLive(true);
-    }
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
       <Header
         activeTab={activeTab}
         onTabChange={setActiveTab}
         champion={bracket.champion}
-        liveUpdatedAt={liveUpdatedAt}
-        isLive={isLive}
-        onSyncLive={handleSyncLive}
       />
 
       {activeTab === 'knockout' && (
@@ -179,9 +140,6 @@ export default function App() {
           onReorderGroup={handleReorderGroup}
           thirdPlaceRanking={currentThirdPlace}
           onThirdPlaceReorder={handleThirdPlaceReorder}
-          liveUpdatedAt={liveUpdatedAt}
-          isLive={isLive}
-          onSyncLive={handleSyncLive}
         />
       )}
     </div>
